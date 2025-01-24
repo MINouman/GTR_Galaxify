@@ -13,16 +13,10 @@ DATABASE_URL = 'postgresql://admin:Aikittam1@localhost:5432/samsung_phones'
 engine = create_engine(DATABASE_URL)
 
 def clean_input(text):
-    """
-    Cleans the input text by removing special characters and stripping spaces.
-    """
     cleaned_text = re.sub(r"[^a-zA-Z0-9\s]", "", text)
     return cleaned_text.strip()
 
 def get_phone_spec_response(column, model_name):
-    """
-    Fetch a specific column (like price_at_launch, release_date, etc.) from the phone_specs table.
-    """
     try:
         query = f"SELECT {column} FROM phone_specs WHERE LOWER(model_name) = LOWER(:model_name)"
         with engine.connect() as connection:
@@ -36,19 +30,12 @@ def get_phone_spec_response(column, model_name):
         return None
 
 def generate_gpt_response(input_text):
-    """
-    Generate a GPT-2 fallback response.
-    """
     encoded_input = tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=512)
     output = model.generate(**encoded_input, max_length=100, num_return_sequences=1)
     response_text = tokenizer.decode(output[0], skip_special_tokens=True)
     return response_text.strip()
 
 def get_response(input_text):
-    """
-    Generate a chatbot response. Handles database queries for phone specs, comparisons,
-    recommendations, and general GPT-2 responses.
-    """
     try:
         input_text = input_text.lower().strip()
         print(f"DEBUG: User input received: '{input_text}'")
