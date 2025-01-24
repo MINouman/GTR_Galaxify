@@ -9,9 +9,6 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 @app.route('/')
 def index():
-    """
-    Serve the frontend.
-    """
     try:
         return render_template('index.html')
     except Exception as e:
@@ -20,9 +17,6 @@ def index():
 
 @app.route('/phones', methods=['GET'])
 def list_phones():
-    """
-    Endpoint to list all phone models in the database.
-    """
     try:
         query = "SELECT model_name FROM phone_specs"
         with engine.connect() as connection:
@@ -35,9 +29,6 @@ def list_phones():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    """
-    Endpoint to handle chatbot messages.
-    """
     try:
         user_input = request.json.get("message", "").strip()
         if not user_input:
